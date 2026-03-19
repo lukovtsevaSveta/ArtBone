@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фигурки из кости - Art Bone</title>
+    <link rel="icon" type="image/x-icon" href="img/logo2.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Days+One&family=Amarante&family=Do+Hyeon&family=Beau+Rivage&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        
+        /* Кнопка "Назад" слева */
+        .back-button {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--color-accent);
+            color: var(--color-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 20px;
+            z-index: 999;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: var(--color-secondary);
+            color: var(--color-dark);
+            transform: translateX(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .back-button {
+                top: 20px;
+                left: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+        }
+        /* Стили для страницы фигурок */
+        .figurines-page {
+            min-height: 100vh;
+            background: var(--color-primary);
+            padding-top: 120px;
+            padding-bottom: 80px;
+        }
+
+        .page-header {
+            max-width: 1400px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-family: 'Days One', sans-serif;
+            color: var(--color-dark);
+            font-size: 3rem;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .page-description {
+            color: var(--color-dark);
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+            opacity: 0.8;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+        }
+
+        /* Панель фильтров и сортировки */
+        .filters-panel {
+            max-width: 1400px;
+            margin: 0 auto 50px;
+            padding: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+        }
+
+        .filters-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 150px;
+        }
+
+        .filter-item label {
+            font-size: 0.9rem;
+            color: var(--color-dark);
+            font-weight: 600;
+            font-family: 'Days One', sans-serif;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border: 2px solid var(--color-secondary);
+            border-radius: 10px;
+            background: var(--color-primary);
+            color: var(--color-dark);
+            font-family: 'Days One', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .filter-select:hover {
+            border-color: var(--color-accent);
+        }
+
+        .filter-select:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(142, 141, 137, 0.1);
+        }
+
+        .price-range {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .price-input {
+            width: 80px;
+            padding: 8px 12px;
+            border: 2px solid var(--color-secondary);
+            border-radius: 8px;
+            background: var(--color-primary);
+            color: var(--color-dark);
+            font-family: 'Days One', sans-serif;
+            text-align: center;
+        }
+
+        .price-slider {
+            width: 200px;
+            height: 4px;
+            background: var(--color-secondary);
+            border-radius: 2px;
+            position: relative;
+            margin-top: 8px;
+        }
+
+        .price-slider-fill {
+            position: absolute;
+            height: 100%;
+            background: var(--color-accent);
+            border-radius: 2px;
+        }
+
+        .price-slider-handle {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: var(--color-dark);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .price-slider-handle:hover {
+            transform: translateY(-50%) scale(1.2);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .filter-btn {
+            padding: 10px 25px;
+            border: 2px solid var(--color-accent);
+            background: var(--color-accent);
+            color: var(--color-primary);
+            border-radius: 10px;
+            font-family: 'Days One', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background: var(--color-dark);
+            border-color: var(--color-dark);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.reset {
+            background: transparent;
+            color: var(--color-dark);
+            border-color: var(--color-secondary);
+        }
+
+        .filter-btn.reset:hover {
+            background: var(--color-secondary);
+            color: var(--color-dark);
+        }
+
+        .sorting {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sorting label {
+            font-size: 0.9rem;
+            color: var(--color-dark);
+            font-weight: 600;
+            font-family: 'Days One', sans-serif;
+        }
+
+        /* Анимации */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .products-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        /* Адаптивность сетки */
+        @media (max-width: 1200px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .filters-panel {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 20px;
+            }
+            
+            .filters-group {
+                justify-content: center;
+            }
+            
+            .filter-item {
+                min-width: 140px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .filter-item {
+                min-width: 120px;
+            }
+        }
+
+        .product-card {
+            background: var(--color-primary);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid rgba(210, 200, 188, 0.3);
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+        }
+
+        .product-card.visible {
+            animation: cardAppear 0.6s ease forwards;
+        }
+
+        .product-card:nth-child(1) { animation-delay: 0.1s; }
+        .product-card:nth-child(2) { animation-delay: 0.2s; }
+        .product-card:nth-child(3) { animation-delay: 0.3s; }
+        .product-card:nth-child(4) { animation-delay: 0.4s; }
+        .product-card:nth-child(5) { animation-delay: 0.5s; }
+        .product-card:nth-child(6) { animation-delay: 0.6s; }
+        .product-card:nth-child(7) { animation-delay: 0.7s; }
+        .product-card:nth-child(8) { animation-delay: 0.8s; }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: var(--color-secondary);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            position: relative;
+            overflow: hidden;
+            background: var(--color-secondary);
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--color-accent);
+            color: var(--color-primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .product-actions {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .product-card:hover .product-actions {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .product-action-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(248, 245, 240, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-dark);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .product-action-btn:hover {
+            background: var(--color-accent);
+            color: var(--color-primary);
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-category {
+            color: var(--color-accent);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .product-name {
+            font-family: 'Days One', sans-serif;
+            color: var(--color-dark);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .product-name a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .product-name a:hover {
+            color: var(--color-accent);
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .stars i {
+            color: #FFD700;
+            font-size: 0.9rem;
+        }
+
+        .stars i.inactive {
+            color: #E0E0E0;
+        }
+
+        .reviews-count {
+            color: var(--color-accent);
+            font-size: 0.85rem;
+        }
+
+        .product-description {
+            color: var(--color-dark);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            opacity: 0.8;
+            height: 40px;
+            overflow: hidden;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-family: 'Days One', sans-serif;
+            color: var(--color-dark);
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .product-price span {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .add-to-cart {
+            background: var(--color-accent);
+            color: var(--color-primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Days One', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-to-cart:hover {
+            background: var(--color-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-to-cart i {
+            font-size: 1rem;
+        }
+
+        /* Модальное окно товара */
+        .product-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: var(--color-primary);
+            width: 90%;
+            max-width: 1200px;
+            margin: 50px auto;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--color-accent);
+            color: var(--color-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2001;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: var(--color-dark);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding: 40px;
+            min-height: 600px;
+        }
+
+        @media (max-width: 768px) {
+            .modal-body {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 20px;
+            }
+        }
+
+        .product-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 15px;
+            cursor: zoom-in;
+        }
+
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .main-image.zoomed img {
+            transform: scale(2);
+            cursor: zoom-out;
+        }
+
+        .thumbnail-images {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .thumbnail.active {
+            opacity: 1;
+            border: 2px solid var(--color-accent);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Стили для сторителлинга с анимацией скролла */
+        .product-details {
+            padding: 20px 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-details h1 {
+            color: var(--color-dark);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-family: 'Days One', sans-serif;
+        }
+
+        .product-details .price {
+            color: var(--color-accent);
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .product-details .rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        /* Контейнер для сторителлинга */
+        .storytelling-container {
+            flex: 1;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            border-radius: 15px;
+            margin-top: 20px;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            max-height: 400px;
+            /* Улучшаем прокрутку */
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-accent) rgba(210, 200, 188, 0.1);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Стилизация скроллбара для Webkit браузеров */
+        .storytelling-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .storytelling-container::-webkit-scrollbar-track {
+            background: rgba(210, 200, 188, 0.1);
+            border-radius: 3px;
+        }
+
+        .storytelling-container::-webkit-scrollbar-thumb {
+            background: var(--color-accent);
+            border-radius: 3px;
+        }
+
+        .storytelling-container::-webkit-scrollbar-thumb:hover {
+            background: var(--color-dark);
+        }
+
+        .story-section {
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            height: 100%;
+            min-height: 400px;
+            padding: 30px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0.3;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(210, 200, 188, 0.05);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .story-section.active {
+            opacity: 1;
+            transform: translateY(0);
+            background: rgba(210, 200, 188, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .story-section h3 {
+            color: var(--color-accent);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-family: 'Days One', sans-serif;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .story-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--color-accent);
+            transition: width 0.8s ease;
+        }
+
+        .story-section.active h3::after {
+            width: 100px;
+        }
+
+        .story-content {
+            color: var(--color-dark);
+            line-height: 1.6;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .story-content p {
+            margin-bottom: 15px;
+        }
+
+        /* Индикатор прогресса сторителлинга */
+        .story-progress {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(142, 141, 137, 0.3);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .progress-dot.active {
+            background: var(--color-accent);
+            transform: scale(1.3);
+        }
+
+        .progress-dot::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: transparent;
+        }
+
+        .progress-dot:hover {
+            background: var(--color-dark);
+        }
+
+        /* Анимация появления элементов внутри секции */
+        .story-content > * {
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.6s ease 0.3s;
+        }
+
+        .story-section.active .story-content > * {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Анимация для спецификаций */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .spec-item {
+            padding: 15px;
+            background: rgba(210, 200, 188, 0.1);
+            border-radius: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .spec-item .label {
+            color: var(--color-accent);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .spec-item .value {
+            color: var(--color-dark);
+            font-size: 1rem;
+        }
+
+        .story-section.active .spec-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .story-section.active .spec-item:nth-child(1) { transition-delay: 0.1s; }
+        .story-section.active .spec-item:nth-child(2) { transition-delay: 0.2s; }
+        .story-section.active .spec-item:nth-child(3) { transition-delay: 0.3s; }
+        .story-section.active .spec-item:nth-child(4) { transition-delay: 0.4s; }
+
+        /* Для мобильных устройств улучшаем касания */
+        @media (max-width: 768px) {
+            .storytelling-container {
+                scroll-snap-type: y proximity;
+                max-height: 350px;
+            }
+            
+            .story-section {
+                min-height: 350px;
+                padding: 20px;
+                scroll-snap-stop: normal;
+            }
+            
+            .story-progress {
+                right: 10px;
+                gap: 12px;
+            }
+        }
+
+        /* Инструкция для пользователя */
+        .story-instruction {
+            text-align: center;
+            color: var(--color-accent);
+            font-size: 0.9rem;
+            margin-top: 15px;
+            opacity: 0.7;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Days One', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-actions .buy-now {
+            background: var(--color-dark);
+            color: var(--color-primary);
+            border: none;
+        }
+
+        .modal-actions .add-to-cart-modal {
+            background: var(--color-accent);
+            color: var(--color-primary);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .modal-actions button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Счетчик товаров */
+        .products-counter {
+            max-width: 1400px;
+            margin: 20px auto 30px;
+            padding: 0 20px;
+            color: var(--color-dark);
+            font-size: 0.95rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.5s forwards;
+        }
+
+        .products-counter span {
+            font-weight: bold;
+            color: var(--color-accent);
+        }
+
+        /* Стили для сторителлинга с анимацией скролла */
+.storytelling-container {
+    flex: 1;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 15px;
+    margin-top: 20px;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    max-height: 400px;
+    /* Улучшаем прокрутку */
+    -webkit-overflow-scrolling: touch;
+    /* УБИРАЕМ СКРОЛЛБАР */
+    scrollbar-width: none; /* Firefox */
+}
+
+/* Скрываем скроллбар для Webkit браузеров (Chrome, Safari, Edge) */
+.storytelling-container::-webkit-scrollbar {
+    display: none; /* Скрываем полностью */
+}
+
+/* Убедитесь, что в секциях тоже нет лишних отступов */
+.story-section {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    height: 100%;
+    min-height: 400px;
+    padding: 30px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0.3;
+    transform: translateY(50px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(210, 200, 188, 0.05);
+    border-radius: 15px;
+    margin-bottom: 20px;
+    /* Убираем возможность выделения для лучшего взаимодействия с прокруткой */
+    user-select: none;
+    -webkit-user-select: none;
+    /* Убираем возможный внутренний скролл */
+    overflow: hidden;
+}
+
+/* Для мобильных устройств улучшаем касания */
+@media (max-width: 768px) {
+    .storytelling-container {
+        scroll-snap-type: y proximity;
+        /* Убираем возможные отступы */
+        padding-right: 0;
+        margin-right: 0;
+    }
+    
+    .story-section {
+        min-height: 350px;
+        padding: 20px;
+        scroll-snap-stop: normal;
+        /* Убираем возможные внутренние скроллы */
+        overflow: hidden;
+    }
+    
+    /* Убедимся, что контент внутри тоже не создает скролл */
+    .story-content {
+        overflow: hidden;
+        max-height: none;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <!-- Основной контент -->
+    <main class="figurines-page">
+        <!-- Кнопка "Назад" на главную -->
+        <a href="index.html" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        <!-- Заголовок страницы -->
+        <div class="page-header">
+            <h1 class="page-title">Фигурки из кости</h1>
+            <p class="page-description">
+                Изысканные резные фигурки из натуральной кости, созданные вручную нашими мастерами. 
+                Каждая фигурка - уникальное произведение искусства, передающее красоту и гармонию природы.
+            </p>
+        </div>
+
+        <!-- Счетчик товаров -->
+        <div class="products-counter">
+            Найдено: <span id="productsCount">8</span> фигурок
+        </div>
+
+        <!-- Панель фильтров и сортировки -->
+        <div class="filters-panel">
+            <div class="filters-group">
+                <div class="filter-item">
+                    <label for="categoryFilter">Категория</label>
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="all">Все категории</option>
+                        <option value="animals">Животные</option>
+                        <option value="birds">Птицы</option>
+                        <option value="mythological">Мифологические</option>
+                    </select>
+                </div>
+                
+                <div class="filter-item">
+                    <label for="materialFilter">Материал</label>
+                    <select id="materialFilter" class="filter-select">
+                        <option value="all">Все материалы</option>
+                        <option value="mammoth">Кость мамонта</option>
+                        <option value="deer">Олений рог</option>
+                    </select>
+                </div>
+                
+                <div class="filter-item">
+                    <label>Цена, руб.</label>
+                    <div class="price-range">
+                        <input type="number" id="minPrice" class="price-input" placeholder="0" min="0" max="50000" value="0">
+                        <span>-</span>
+                        <input type="number" id="maxPrice" class="price-input" placeholder="50000" min="0" max="50000" value="50000">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="filters-group">
+                <div class="sorting">
+                    <label for="sortSelect">Сортировка:</label>
+                    <select id="sortSelect" class="filter-select">
+                        <option value="default">По умолчанию</option>
+                        <option value="price-asc">Цена: по возрастанию</option>
+                        <option value="price-desc">Цена: по убыванию</option>
+                        <option value="rating">По рейтингу</option>
+                        <option value="newest">Сначала новые</option>
+                    </select>
+                </div>
+                
+                <div class="filter-actions">
+                    <button class="filter-btn" id="applyFilters">Применить</button>
+                    <button class="filter-btn reset" id="resetFilters">Сбросить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Сетка товаров -->
+        <div class="products-grid" id="productsGrid">
+            <!-- Фигурки будут добавлены через JavaScript -->
+        </div>
+    </main>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-logo">
+                    <a href="index.html" class="logo-link">
+                        <img src="img/logo2.png" alt="Art Bone" class="logo-img">
+                        <div class="logo-text">
+                            <span class="logo-main">Art Bone</span>
+                            <span class="logo-shadow">Art Bone</span>
+                        </div>
+                    </a>
+                    <p class="footer-description">
+                        Изысканные изделия из кости ручной работы
+                    </p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Навигация</h4>
+                        <ul>
+                            <li><a href="index.html#home">Главная</a></li>
+                            <li><a href="index.html#products">Изделия</a></li>
+                            <li><a href="index.html#about">О нас</a></li>
+                            <li><a href="index.html#contacts">Контакты</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>Категории</h4>
+                        <ul>
+                            <li><a href="knives.html">Ножи</a></li>
+                            <li><a href="figurines.html">Фигурки</a></li>
+                            <li><a href="jewelry.html">Украшения</a></li>
+                            <li><a href="compositions.html">Композиции</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>Информация</h4>
+                        <ul>
+                            <li><a href="#">Доставка и оплата</a></li>
+                            <li><a href="#">Гарантия</a></li>
+                            <li><a href="#">Возврат</a></li>
+                            <li><a href="#">Конфиденциальность</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Art Bone. Все права защищены.</p>
+                </div>
+                
+                <div class="footer-payment">
+                    <div class="payment-methods">
+                        <i class="fab fa-cc-visa" title="Visa"></i>
+                        <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+                        <i class="fa-solid fa-credit-card" title="Мир"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Модальное окно товара -->
+    <div id="productModal" class="product-modal">
+        <div class="modal-content">
+            <div class="close-modal">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="modal-body">
+                <div class="product-gallery">
+                    <div class="main-image" id="mainImage">
+                        <img src="" alt="Фигурка" id="modalMainImage">
+                    </div>
+                    <div class="thumbnail-images" id="thumbnailImages">
+                    </div>
+                </div>
+                <div class="product-details">
+                    <h1 id="modalProductName"></h1>
+                    <div class="price" id="modalProductPrice"></div>
+                    <div class="rating">
+                        <div class="stars" id="modalRatingStars"></div>
+                        <span class="reviews-count" id="modalReviewsCount"></span>
+                    </div>
+                    
+                    <!-- Контейнер для сторителлинга с анимацией скролла -->
+                    <div class="storytelling-container" id="storyContainer">
+                        <div class="story-section active" id="specs-section">
+                            <h3>Характеристики</h3>
+                            <div class="specs-grid">
+                                <div class="spec-item">
+                                    <div class="label">Материал</div>
+                                    <div class="value" id="modalMaterial"></div>
+                                </div>
+                                <div class="spec-item">
+                                    <div class="label">Высота</div>
+                                    <div class="value" id="modalHeight"></div>
+                                </div>
+                                <div class="spec-item">
+                                    <div class="label">Ширина</div>
+                                    <div class="value" id="modalWidth"></div>
+                                </div>
+                                <div class="spec-item">
+                                    <div class="label">Вес</div>
+                                    <div class="value" id="modalWeight"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="story-section" id="creation-section">
+                            <h3>История создания</h3>
+                            <div class="story-content">
+                                <p>Эта фигурка создана вручную мастером Константином Луковцевым, потомственным косторезом из Якутии. Для работы использовались специальные инструменты.</p>
+                                <p>Каждая деталь вырезалась с ювелирной точностью в течение нескольких недель, что делает каждую работу уникальным произведением искусства.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="story-section" id="symbolism-section">
+                            <h3>Материал</h3>
+                            <div class="story-content">
+                                <p>Кость мамонта - древний материал возрастом 10 000-40 000 лет, добываемый в условиях вечной мерзлоты Якутии. Каждый кусок уникален по цвету, текстуре и сохранности.</p>
+                                <p>Природные прожилки и оттенки материала сохранены мастером и обыграны в композиции, что придает фигурке особую ценность и аутентичность.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="story-section" id="details-section">
+                            <h3>Особенности</h3>
+                            <div class="story-content">
+                                <p>Все фигурки проходят многоступенчатую обработку: резьбу, шлифовку, полировку и консервацию специальным воском для сохранения на века.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Индикатор прогресса -->
+                    <div class="story-progress" id="storyProgress">
+                        <div class="progress-dot active" data-section="specs"></div>
+                        <div class="progress-dot" data-section="creation"></div>
+                        <div class="progress-dot" data-section="symbolism"></div>
+                        <div class="progress-dot" data-section="details"></div>
+                    </div>
+                    
+                    <div class="story-instruction">
+                        <i class="fas fa-mouse-pointer"></i> Прокрутите для продолжения истории
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button class="buy-now" id="modalBuyNow">
+                            Купить сейчас
+                        </button>
+                        <button class="add-to-cart-modal" id="modalAddToCart">
+                            <i class="fas fa-shopping-cart"></i> В корзину
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно авторизации -->
+    <div class="auth-modal" id="authModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-container">
+            <!-- (та же структура модального окна из index.html) -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Данные для фигурок
+        const figurinesData = [
+    {
+        id: 1,
+        name: 'Фигурка "Орел"',
+        price: 30000,
+        category: 'birds',
+        material: 'mammoth',
+        height: '6 см',
+        width: '5,5 см',
+        weight: '250 г',
+        rating: 4.5,
+        reviews: 24,
+        description: 'Величественный орел из кости мамонта с расправленными крыльями',
+        fullDescription: 'Фигурка орла в момент взлета, вырезанная из цельного куска бивня мамонта. Передана вся мощь и грация царя небес - от изгиба крыльев до мельчайших перьев. Орел символизирует силу, свободу и духовное прозрение. Идеальный подарок руководителю или коллекционеру.',
+        badge: 'Хит продаж',
+        images: ['img/10.jpg', 'img/10.jpg', 'img/10.jpg', 'img/10.jpg'],
+        dateAdded: '2024-01-15'
+    },
+    {
+        id: 2,
+        name: 'Фигурка "Три медведя"',
+        price: 40000,
+        category: 'animals',
+        material: 'mammoth',
+        height: '16 см',
+        width: '13 см',
+        weight: '500 г',
+        rating: 4,
+        reviews: 18,
+        description: 'Семейная композиция трех медведей из кости мамонта',
+        fullDescription: 'Уникальная работа: медведица с двумя медвежатами в естественной позе. Вырезана из цельного куска бивня мамонта с сохранением природного рисунка материала. Символизирует семейные ценности, материнскую заботу и защиту. Эксклюзивная композиция для настоящих ценителей.',
+        badge: 'Новинка',
+        images: ['img/6.jpg', 'img/6.jpg', 'img/6.jpg', 'img/6.jpg'],
+        dateAdded: '2024-03-10'
+    },
+    {
+        id: 3,
+        name: 'Фигурка "Носорог"',
+        price: 20000,
+        category: 'animals',
+        material: 'mammoth',
+        height: '10,5 см',
+        width: '8 см',
+        weight: '500 г',
+        rating: 5,
+        reviews: 32,
+        description: 'Мощный носорог из кости мамонта в натуральную величину',
+        fullDescription: 'Фигурка носорога, передающая всю мощь и брутальность этого древнего животного. Особенно реалистично проработаны складки кожи и массивное телосложение. Носорог символизирует устойчивость, надежность и несокрушимую силу. Редкий экземпляр в коллекциях.',
+        badge: null,
+        images: ['img/5.jpg', 'img/5.jpg', 'img/5.jpg', 'img/5.jpg'],
+        dateAdded: '2024-02-20'
+    },
+    {
+        id: 4,
+        name: 'Фигурка "Бабочка"',
+        price: 20000,
+        category: 'birds',
+        material: 'mammoth',
+        height: '11 см',
+        width: '8 см',
+        weight: '800 г',
+        rating: 5,
+        reviews: 15,
+        description: 'Ажурная бабочка из кости мамонта с тончайшей резьбой',
+        fullDescription: 'Невероятно изящная работа: бабочка с расправленными крыльями, украшенными ажурной резьбой в виде природных узоров. Изготовлена из светлой кости мамонта, что подчеркивает невесомость композиции. Символизирует легкость, трансформацию и красоту мимолетного момента.',
+        badge: 'Эксклюзив',
+        images: ['img/23.jpg', 'img/23.jpg', 'img/23.jpg', 'img/23.jpg'],
+        dateAdded: '2024-01-30'
+    },
+    {
+        id: 5,
+        name: 'Фигурка "Лебеди"',
+        price: 30000,
+        category: 'birds',
+        material: 'mammoth',
+        height: '10 см',
+        width: '7 см',
+        weight: '600 г',
+        rating: 4.5,
+        reviews: 28,
+        description: 'Романтическая пара лебедей из кости мамонта',
+        fullDescription: 'Два лебедя, образующих гармоничную композицию в форме сердца. Изготовлены из цельного куска кости мамонта, что подчеркивает единство пары. Лебеди символизируют вечную любовь, верность и гармонию в отношениях. Прекрасный подарок на свадьбу.',
+        badge: 'Распродажа',
+        images: ['img/24.jpg', 'img/24.jpg', 'img/24.jpg', 'img/24.jpg'],
+        dateAdded: '2024-03-01'
+    },
+    {
+        id: 6,
+        name: 'Фигурка "Олень"',
+        price: 5000,
+        category: 'animals',
+        material: 'mammoth',
+        height: '7,5 см',
+        width: '2,5 см',
+        weight: '220 г',
+        rating: 4,
+        reviews: 20,
+        description: 'Благородный олень с ветвистыми рогами из кости мамонта',
+        fullDescription: 'Изящная фигурка оленя в гордой позе с поднятой головой. Особенно детально проработаны ветвистые рога - символ духовности и связи с природой. Олень символизирует благородство, грацию и возрождение. Компактный размер делает его идеальным талисманом.',
+        badge: null,
+        images: ['img/25.jpg', 'img/25.jpg', 'img/25.jpg', 'img/25.jpg'],
+        dateAdded: '2024-02-15'
+    },
+    {
+        id: 7,
+        name: 'Фигурка "Медведь"',
+        price: 4000,
+        category: 'animals',
+        material: 'mammoth',
+        height: '6,5 см',
+        width: '4,5 см',
+        weight: '50 г',
+        rating: 4.5,
+        reviews: 22,
+        description: 'Медведь в движении из кости мамонта',
+        fullDescription: 'Небольшая, но очень выразительная фигурка медведя, запечатленного в момент шага. Несмотря на миниатюрные размеры, мастер передал всю мощь и характер хозяина тайги. Медведь символизирует силу, мужество и защиту. Идеальный карманный талисман.',
+        badge: 'Новинка',
+        images: ['img/26.jpg', 'img/27.jpg', 'img/28.jpg', 'img/26.jpg'],
+        dateAdded: '2024-03-05'
+    },
+    {
+        id: 8,
+        name: 'Фигурка "Лошадь"',
+        price: 45000,
+        category: 'animals',
+        material: 'mammoth',
+        height: '9 см',
+        width: '8 см',
+        weight: '200 г',
+        rating: 5,
+        reviews: 30,
+        description: 'Скачущая лошадь премиум-класса из кости мамонта',
+        fullDescription: 'Эксклюзивная фигурка лошади в галопе, вырезанная из отборной кости мамонта. Передана вся динамика движения: развевающаяся грива, напряжение мышц, энергия скорости. Лошадь символизирует свободу, благородство и непокорный дух. Шедевр косторезного искусства.',
+        badge: 'Эксклюзив',
+        images: ['img/29.jpg', 'img/29.jpg', 'img/29.jpg', 'img/29.jpg'],
+        dateAdded: '2024-02-28'
+    }
+];
+
+        // Текущие фильтры
+        let currentFilters = {
+            category: 'all',
+            material: 'all',
+            minPrice: 0,
+            maxPrice: 50000,
+            sortBy: 'default'
+        };
+
+        // Функция для отображения звезд рейтинга
+        function renderStars(rating) {
+            let starsHTML = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            
+            for (let i = 1; i <= 5; i++) {
+                if (i <= fullStars) {
+                    starsHTML += '<i class="fas fa-star"></i>';
+                } else if (i === fullStars + 1 && hasHalfStar) {
+                    starsHTML += '<i class="fas fa-star-half-alt"></i>';
+                } else {
+                    starsHTML += '<i class="far fa-star"></i>';
+                }
+            }
+            return starsHTML;
+        }
+
+        // Функция для форматирования цены
+        function formatPrice(price) {
+            return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        }
+
+        // Функция для создания HTML карточки товара
+        function createProductCard(product) {
+            const categoryNames = {
+                'animals': 'Фигурки животных',
+                'birds': 'Фигурки птиц',
+                'mythological': 'Мифологические'
+            };
+            
+            const materialNames = {
+                'mammoth': 'Кость мамонта',
+                'deer': 'Олений рог'
+            };
+
+            return `
+                <div class="product-card" data-product-id="${product.id}" data-category="${product.category}" data-material="${product.material}" data-price="${product.price}" data-rating="${product.rating}" data-date="${product.dateAdded}">
+                    <div class="product-image">
+                        ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+                        <div class="product-actions">
+                            <a href="#" class="product-action-btn favorite-btn" title="В избранное">
+                                <i class="far fa-heart"></i>
+                            </a>
+                            <a href="#" class="product-action-btn zoom-btn" title="Быстрый просмотр">
+                                <i class="fas fa-search-plus"></i>
+                            </a>
+                        </div>
+                        <img src="${product.images[0]}" alt="${product.name}" loading="lazy">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">${categoryNames[product.category]}</div>
+                        <h3 class="product-name">
+                            <a href="#" class="view-product">${product.name}</a>
+                        </h3>
+                        <div class="product-rating">
+                            <div class="stars">
+                                ${renderStars(product.rating)}
+                            </div>
+                            <span class="reviews-count">(${product.reviews} отзывов)</span>
+                        </div>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-footer">
+                            <div class="product-price">${formatPrice(product.price)} <span>руб.</span></div>
+                            <button class="add-to-cart" data-product-id="${product.id}">
+                                <i class="fas fa-shopping-cart"></i> В корзину
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Функция для отображения товаров
+        function displayProducts(products) {
+            const productsGrid = document.getElementById('productsGrid');
+            const productsCount = document.getElementById('productsCount');
+            
+            productsGrid.innerHTML = '';
+            
+            if (products.length === 0) {
+                productsGrid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
+                        <h3 style="color: var(--color-accent); margin-bottom: 20px;">Ничего не найдено</h3>
+                        <p style="color: var(--color-dark);">Попробуйте изменить параметры фильтрации</p>
+                    </div>
+                `;
+                productsCount.textContent = '0';
+                return;
+            }
+            
+            productsCount.textContent = products.length;
+            
+            products.forEach((product, index) => {
+                const cardHTML = createProductCard(product);
+                productsGrid.innerHTML += cardHTML;
+                
+                // Добавляем класс visible для анимации после небольшой задержки
+                setTimeout(() => {
+                    const card = productsGrid.children[index];
+                    if (card) {
+                        card.classList.add('visible');
+                    }
+                }, 100 * index);
+            });
+            
+            // Инициализируем обработчики событий для новых карточек
+            initProductCardEvents();
+        }
+
+        // Функция для фильтрации товаров
+        function filterProducts() {
+            let filtered = [...figurinesData];
+            
+            // Фильтр по категории
+            if (currentFilters.category !== 'all') {
+                filtered = filtered.filter(product => product.category === currentFilters.category);
+            }
+            
+            // Фильтр по материалу
+            if (currentFilters.material !== 'all') {
+                filtered = filtered.filter(product => product.material === currentFilters.material);
+            }
+            
+            // Фильтр по цене
+            filtered = filtered.filter(product => 
+                product.price >= currentFilters.minPrice && 
+                product.price <= currentFilters.maxPrice
+            );
+            
+            // Сортировка
+            switch (currentFilters.sortBy) {
+                case 'price-asc':
+                    filtered.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-desc':
+                    filtered.sort((a, b) => b.price - a.price);
+                    break;
+                case 'rating':
+                    filtered.sort((a, b) => b.rating - a.rating);
+                    break;
+                case 'newest':
+                    filtered.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+                    break;
+                default:
+                    // По умолчанию - без сортировки
+                    break;
+            }
+            
+            displayProducts(filtered);
+        }
+
+        // Функция для обновления фильтров из формы
+        function updateFilters() {
+            currentFilters.category = document.getElementById('categoryFilter').value;
+            currentFilters.material = document.getElementById('materialFilter').value;
+            currentFilters.minPrice = parseInt(document.getElementById('minPrice').value) || 0;
+            currentFilters.maxPrice = parseInt(document.getElementById('maxPrice').value) || 50000;
+            currentFilters.sortBy = document.getElementById('sortSelect').value;
+            
+            // Корректируем цены, если min > max
+            if (currentFilters.minPrice > currentFilters.maxPrice) {
+                const temp = currentFilters.minPrice;
+                currentFilters.minPrice = currentFilters.maxPrice;
+                currentFilters.maxPrice = temp;
+                document.getElementById('minPrice').value = currentFilters.minPrice;
+                document.getElementById('maxPrice').value = currentFilters.maxPrice;
+            }
+            
+            filterProducts();
+        }
+
+        // Функция для сброса фильтров
+        function resetFilters() {
+            document.getElementById('categoryFilter').value = 'all';
+            document.getElementById('materialFilter').value = 'all';
+            document.getElementById('minPrice').value = 0;
+            document.getElementById('maxPrice').value = 50000;
+            document.getElementById('sortSelect').value = 'default';
+            
+            currentFilters = {
+                category: 'all',
+                material: 'all',
+                minPrice: 0,
+                maxPrice: 50000,
+                sortBy: 'default'
+            };
+            
+            filterProducts();
+        }
+
+        // Инициализация анимации сторителлинга
+        function initStorytellingAnimation() {
+            const storyContainer = document.getElementById('storyContainer');
+            const storySections = document.querySelectorAll('.story-section');
+            const progressDots = document.querySelectorAll('.progress-dot');
+            
+            if (!storyContainer) return;
+            
+            // Функция для обновления активной секции
+            function updateActiveSection() {
+                const containerTop = storyContainer.scrollTop;
+                const containerHeight = storyContainer.clientHeight;
+                
+                let activeIndex = 0;
+                let minDistance = Infinity;
+                
+                // Находим ближайшую секцию к центру контейнера
+                storySections.forEach((section, index) => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    const sectionCenter = sectionTop + sectionHeight / 2;
+                    const containerCenter = containerTop + containerHeight / 2;
+                    const distance = Math.abs(sectionCenter - containerCenter);
+                    
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        activeIndex = index;
+                    }
+                });
+                
+                // Обновляем классы активности
+                storySections.forEach((section, index) => {
+                    if (index === activeIndex) {
+                        section.classList.add('active');
+                        if (progressDots[index]) {
+                            progressDots[index].classList.add('active');
+                        }
+                    } else {
+                        section.classList.remove('active');
+                        if (progressDots[index]) {
+                            progressDots[index].classList.remove('active');
+                        }
+                    }
+                });
+            }
+            
+            // Обработчик прокрутки
+            storyContainer.addEventListener('scroll', updateActiveSection);
+            
+            // Обработчики для точек навигации
+            progressDots.forEach((dot, index) => {
+                dot.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetSection = storySections[index];
+                    if (targetSection) {
+                        // Прокручиваем к началу секции
+                        storyContainer.scrollTo({
+                            top: targetSection.offsetTop,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Обновляем активные классы после завершения анимации
+                        setTimeout(updateActiveSection, 500);
+                    }
+                });
+            });
+            
+            // Прокрутка колесом мыши - работаем со стандартной прокруткой
+            storyContainer.addEventListener('wheel', (e) => {
+                // Позволяем стандартной прокрутке работать
+                // Прокрутка будет с snap-эффектом благодаря CSS
+            }, { passive: true });
+            
+            // Обработчики для сенсорных устройств
+            let touchStartY = 0;
+            let touchEndY = 0;
+            
+            storyContainer.addEventListener('touchstart', (e) => {
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+            
+            storyContainer.addEventListener('touchend', (e) => {
+                touchEndY = e.changedTouches[0].screenY;
+                handleSwipe();
+            }, { passive: true });
+            
+            function handleSwipe() {
+                const swipeDistance = touchStartY - touchEndY;
+                const minSwipeDistance = 50;
+                
+                if (Math.abs(swipeDistance) > minSwipeDistance) {
+                    let currentIndex = 0;
+                    storySections.forEach((section, index) => {
+                        if (section.classList.contains('active')) {
+                            currentIndex = index;
+                        }
+                    });
+                    
+                    let nextIndex = currentIndex;
+                    if (swipeDistance > 0) {
+                        // Свайп вверх - следующая секция
+                        nextIndex = Math.min(currentIndex + 1, storySections.length - 1);
+                    } else {
+                        // Свайп вниз - предыдущая секция
+                        nextIndex = Math.max(currentIndex - 1, 0);
+                    }
+                    
+                    if (nextIndex !== currentIndex) {
+                        const targetSection = storySections[nextIndex];
+                        storyContainer.scrollTo({
+                            top: targetSection.offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            }
+            
+            // Добавляем обработчики для клавиш стрелок
+            storyContainer.addEventListener('keydown', (e) => {
+                let currentIndex = 0;
+                storySections.forEach((section, index) => {
+                    if (section.classList.contains('active')) {
+                        currentIndex = index;
+                    }
+                });
+                
+                let nextIndex = currentIndex;
+                
+                if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+                    e.preventDefault();
+                    nextIndex = Math.min(currentIndex + 1, storySections.length - 1);
+                } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                    e.preventDefault();
+                    nextIndex = Math.max(currentIndex - 1, 0);
+                } else if (e.key === 'Home') {
+                    e.preventDefault();
+                    nextIndex = 0;
+                } else if (e.key === 'End') {
+                    e.preventDefault();
+                    nextIndex = storySections.length - 1;
+                }
+                
+                if (nextIndex !== currentIndex) {
+                    const targetSection = storySections[nextIndex];
+                    storyContainer.scrollTo({
+                        top: targetSection.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+            
+            // Инициализируем первую секцию как активную
+            updateActiveSection();
+            
+            // Добавляем Intersection Observer для более точного определения активной секции
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const section = entry.target;
+                    const index = Array.from(storySections).indexOf(section);
+                    
+                    if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                        // Центр секции виден
+                        section.classList.add('active');
+                        if (progressDots[index]) {
+                            progressDots[index].classList.add('active');
+                        }
+                    } else if (!entry.isIntersecting || entry.intersectionRatio < 0.3) {
+                        // Секция не в центре
+                        section.classList.remove('active');
+                        if (progressDots[index]) {
+                            progressDots[index].classList.remove('active');
+                        }
+                    }
+                });
+            }, {
+                root: storyContainer,
+                threshold: [0.3, 0.5, 0.8],
+                rootMargin: '0px'
+            });
+            
+            // Наблюдаем за всеми секциями
+            storySections.forEach(section => {
+                observer.observe(section);
+            });
+        }
+
+        // Открытие модального окна товара
+        function openProductModal(productId) {
+            const product = figurinesData.find(p => p.id == productId);
+            if (!product) return;
+
+            const modal = document.getElementById('productModal');
+            const modalMainImage = document.getElementById('modalMainImage');
+            const modalProductName = document.getElementById('modalProductName');
+            const modalProductPrice = document.getElementById('modalProductPrice');
+            const modalMaterial = document.getElementById('modalMaterial');
+            const modalHeight = document.getElementById('modalHeight');
+            const modalWidth = document.getElementById('modalWidth');
+            const modalWeight = document.getElementById('modalWeight');
+            const thumbnailImages = document.getElementById('thumbnailImages');
+            const ratingContainer = document.getElementById('modalRatingStars');
+            const reviewsCount = document.getElementById('modalReviewsCount');
+
+            // Заполняем данные
+            modalMainImage.src = product.images[0];
+            modalProductName.textContent = product.name;
+            modalProductPrice.textContent = formatPrice(product.price) + ' руб.';
+            
+            const materialNames = {
+                'mammoth': 'Кость мамонта',
+                'deer': 'Олений рог'
+            };
+            modalMaterial.textContent = materialNames[product.material];
+            
+            modalHeight.textContent = product.height;
+            modalWidth.textContent = product.width;
+            modalWeight.textContent = product.weight;
+            ratingContainer.innerHTML = renderStars(product.rating);
+            reviewsCount.textContent = `(${product.reviews} отзывов)`;
+
+            // Обновляем миниатюры
+            thumbnailImages.innerHTML = '';
+            product.images.forEach((img, index) => {
+                const thumbnail = document.createElement('div');
+                thumbnail.className = `thumbnail ${index === 0 ? 'active' : ''}`;
+                thumbnail.innerHTML = `<img src="${img}" alt="Фото ${index + 1}">`;
+                thumbnail.addEventListener('click', () => {
+                    // Убираем активный класс у всех миниатюр
+                    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                    // Добавляем активный класс к выбранной
+                    thumbnail.classList.add('active');
+                    // Меняем основное изображение
+                    modalMainImage.src = img;
+                });
+                thumbnailImages.appendChild(thumbnail);
+            });
+
+            // Настраиваем кнопки действий
+            const modalAddToCart = document.getElementById('modalAddToCart');
+            const modalBuyNow = document.getElementById('modalBuyNow');
+            
+            modalAddToCart.onclick = () => {
+                addToCartAnimation(productId);
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            };
+            
+            modalBuyNow.onclick = () => {
+                addToCartAnimation(productId);
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+                // Здесь можно добавить редирект на страницу корзины
+            };
+
+            // Сбрасываем скролл сторителлинга при открытии нового товара
+            const storyContainer = document.getElementById('storyContainer');
+            if (storyContainer) {
+                storyContainer.scrollTop = 0;
+            }
+
+            // Показываем модальное окно
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Инициализируем увеличение изображения
+            initImageZoom();
+            
+            // Инициализируем анимацию сторителлинга
+            setTimeout(() => {
+                initStorytellingAnimation();
+            }, 100);
+        }
+
+        // Анимация добавления в корзину
+        function addToCartAnimation(productId) {
+            const productCard = document.querySelector(`.product-card[data-product-id="${productId}"]`);
+            const addToCartBtn = productCard ? productCard.querySelector('.add-to-cart') : null;
+            
+            if (!addToCartBtn) return;
+            
+            // Создаем летящий элемент
+            const flyElement = document.createElement('div');
+            flyElement.style.cssText = `
+                position: fixed;
+                width: 20px;
+                height: 20px;
+                background: var(--color-accent);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 10000;
+                transition: all 1s ease;
+            `;
+            
+            const rect = addToCartBtn.getBoundingClientRect();
+            const cartIcon = document.querySelector('.fa-shopping-bag');
+            const cartParent = cartIcon ? cartIcon.closest('.nav-icon') : null;
+            
+            if (cartParent) {
+                const cartRect = cartParent.getBoundingClientRect();
+                
+                flyElement.style.left = rect.left + rect.width / 2 + 'px';
+                flyElement.style.top = rect.top + 'px';
+                document.body.appendChild(flyElement);
+                
+                // Анимация полета
+                setTimeout(() => {
+                    flyElement.style.left = cartRect.left + cartRect.width / 2 + 'px';
+                    flyElement.style.top = cartRect.top + cartRect.height / 2 + 'px';
+                    flyElement.style.transform = 'scale(0.3)';
+                    flyElement.style.opacity = '0';
+                }, 50);
+                
+                // Удаление элемента
+                setTimeout(() => {
+                    flyElement.remove();
+                }, 1000);
+            }
+            
+            // Временное изменение кнопки
+            const originalText = addToCartBtn.innerHTML;
+            addToCartBtn.innerHTML = '<i class="fas fa-check"></i> Добавлено';
+            addToCartBtn.style.background = '#4CAF50';
+            
+            setTimeout(() => {
+                addToCartBtn.innerHTML = originalText;
+                addToCartBtn.style.background = '';
+            }, 2000);
+        }
+
+        // Увеличение изображения при клике
+        function initImageZoom() {
+            const mainImage = document.getElementById('mainImage');
+            const modalMainImage = document.getElementById('modalMainImage');
+            
+            if (mainImage && modalMainImage) {
+                mainImage.addEventListener('click', function() {
+                    this.classList.toggle('zoomed');
+                });
+            }
+        }
+
+        // Инициализация обработчиков событий для карточек товаров
+        function initProductCardEvents() {
+            // Кнопки "Быстрый просмотр"
+            document.querySelectorAll('.zoom-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const productCard = this.closest('.product-card');
+                    const productId = productCard.dataset.productId;
+                    openProductModal(productId);
+                });
+            });
+
+            // Кнопки "В избранное"
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('far')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        this.style.color = '#ff4757';
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        this.style.color = '';
+                    }
+                });
+            });
+
+            // Кнопки "В корзину"
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const productId = this.dataset.productId;
+                    addToCartAnimation(productId);
+                });
+            });
+
+            // Клик по названию товара
+            document.querySelectorAll('.view-product').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const productCard = this.closest('.product-card');
+                    const productId = productCard.dataset.productId;
+                    openProductModal(productId);
+                });
+            });
+        }
+
+        // Инициализация анимации при скролле
+        function initScrollAnimation() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const productCard = entry.target;
+                        if (!productCard.classList.contains('visible')) {
+                            productCard.classList.add('visible');
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            // Наблюдаем за всеми карточками
+            document.querySelectorAll('.product-card').forEach(card => {
+                observer.observe(card);
+            });
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Загружаем все товары при первой загрузке
+            filterProducts();
+            
+            // Инициализируем обработчики фильтров
+            document.getElementById('applyFilters').addEventListener('click', updateFilters);
+            document.getElementById('resetFilters').addEventListener('click', resetFilters);
+            
+            // Обработчики изменения фильтров
+            document.getElementById('categoryFilter').addEventListener('change', updateFilters);
+            document.getElementById('materialFilter').addEventListener('change', updateFilters);
+            document.getElementById('minPrice').addEventListener('change', updateFilters);
+            document.getElementById('maxPrice').addEventListener('change', updateFilters);
+            document.getElementById('sortSelect').addEventListener('change', updateFilters);
+            
+            // Закрытие модального окна товара
+            const modal = document.getElementById('productModal');
+            const closeModal = document.querySelector('.close-modal');
+            
+            if (closeModal) {
+                closeModal.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = '';
+                });
+            }
+            
+            // Закрытие по клику вне модального окна
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // Закрытие по ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.style.display === 'block') {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
+            });
+
+            // Инициализируем анимацию при скролле
+            setTimeout(() => {
+                initScrollAnimation();
+            }, 500);
+            
+            initImageZoom();
+        });
+    </script>
+</body>
+</html>
